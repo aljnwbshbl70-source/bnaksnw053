@@ -8,21 +8,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <style>
         :root { --neon-blue: #00f2ff; --glass: rgba(0, 0, 0, 0.85); }
-        body, html { margin: 0; padding: 0; min-height: 100vh; width: 100%; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; transition: 0.5s; background: #0d0d0d; }
-        
-        /* تحسين الخلفية لتكون كامل الشاشة */
-        .bg-overlay { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100vw; 
-            height: 100vh; 
-            background: url('https://images.alphacoders.com/132/1322502.jpeg') no-repeat center center; 
-            background-size: cover; 
-            z-index: -2; 
-            filter: brightness(0.3) contrast(1.1); 
-        }
-
+        body, html { margin: 0; padding: 0; min-height: 100%; width: 100%; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; transition: 0.5s; background: #0d0d0d; }
+        .bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('https://images.alphacoders.com/132/1322502.jpeg') no-repeat center center fixed; background-size: cover; z-index: -2; filter: brightness(0.4); }
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; display: flex; justify-content: center; align-items: center; z-index: 9999; color: var(--neon-blue); font-size: 24px; }
         .container-wrapper { width: 95%; max-width: 500px; margin: auto; padding: 20px 10px; box-sizing: border-box; }
         .login-container { display: flex; justify-content: center; align-items: center; min-height: 90vh; }
@@ -36,56 +23,10 @@
         .section { display: none; animation: fadeIn 0.5s; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* --- تصميم البطاقات المتطور --- */
-        .mada-card { 
-            width: 100%; 
-            max-width: 350px; 
-            height: 200px; 
-            border-radius: 20px; 
-            margin: 10px auto 25px; 
-            padding: 25px; 
-            color: white; 
-            position: relative; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
-            box-sizing: border-box; 
-            transition: all 0.5s ease;
-            overflow: hidden;
-        }
-
-        /* فئة العادي - زهري بسيط */
-        .card-normal {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-            color: #444;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-
-        /* فئة المحترف - أسود مطفي وفضي */
-        .card-pro {
-            background: linear-gradient(135deg, #232526 0%, #414345 100%);
-            border: 1px solid #717171;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.8);
-        }
-        .card-pro::after {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.1) 50%, transparent 55%);
-            background-size: 200% 200%;
-        }
-
-        /* فئة الأسطوري - نيون وسايبر لوكس */
-        .card-legendary {
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(15px);
-            border: 2px solid #00f2ff;
-            box-shadow: 0 0 25px rgba(0, 242, 255, 0.5), inset 0 0 15px rgba(0, 242, 255, 0.2);
-        }
-        .card-legendary #userBalance {
-            text-shadow: 0 0 10px #00f2ff;
-            color: #00f2ff;
-        }
-
+        .mada-card { width: 100%; max-width: 350px; height: 190px; background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); border-radius: 15px; margin: 10px auto 25px; padding: 20px; color: white; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2); box-sizing: border-box; }
         .history-list, .top-list { text-align: right; margin-top: 15px; max-height: 200px; overflow-y: auto; font-size: 14px; }
         .history-item, .top-item { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .history-top { display: flex; justify-content: space-between; width: 100%; }
         .val-plus { color: #00ff88; }
         .val-minus { color: #ff4d4d; }
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 10px 0; border-top: 2px solid var(--neon-blue); z-index: 2000; }
@@ -110,7 +51,7 @@
         <button class="theme-btn" onclick="toggleMusic()"><i class="fas fa-music"></i></button>
     </div>
 
-    <div id="musicPlayerWrap" style="display:none">
+    <div id="musicPlayerWrap">
         <iframe id="ytPlayer" width="1" height="1" src="https://www.youtube.com/embed/sP7tY2PqRQc?enablejsapi=1" frameborder="0" allow="autoplay"></iframe>
     </div>
 
@@ -126,15 +67,12 @@
 
     <div id="main-app" class="container-wrapper">
         <div id="tab-home" class="section active">
-            <div id="dynamicCard" class="mada-card card-normal">
-                <div style="display:flex; justify-content:space-between">
-                    <span id="cardTypeTag" style="font-weight:bold; font-size:12px;">STANDARD</span>
-                    <i class="fas fa-wifi"></i>
-                </div>
-                <div style="margin-top:30px; font-size:18px; letter-spacing:2px; font-family: monospace;">**** **** **** <span id="cardLast">00</span></div>
+            <div class="mada-card">
+                <div style="display:flex; justify-content:space-between"><span>mada</span><i class="fas fa-wifi"></i></div>
+                <div style="margin-top:30px; font-size:18px; letter-spacing:2px">**** **** **** <span id="cardLast">00</span></div>
                 <div style="margin-top:20px;">
-                    <small id="userNickShow" style="opacity: 0.8;">الاسم</small><br>
-                    <span style="font-size:26px; font-weight:bold;" id="userBalance">0</span> <small>بوينت🪙</small>
+                    <small id="userNickShow">الاسم</small><br>
+                    <span style="font-size:26px" id="userBalance">0</span> <small>بوينت🪙</small>
                 </div>
             </div>
             
@@ -228,8 +166,7 @@
         <button class="nav-item" onclick="showTab('tab-shop')"><i class="fas fa-shopping-cart"></i><br>المتجر</button>
         <button class="nav-item" id="adminTabBtn" onclick="showTab('tab-admin')" style="display:none"><i class="fas fa-user-shield"></i><br>الإدارة</button>
     </nav>
-
-    <script type="module">
+        <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
         import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, deleteDoc, query, orderBy, limit, where } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
@@ -314,24 +251,7 @@
         }
 
         window.loadUI = function() {
-            const bal = currentUser.balance;
-            const card = document.getElementById('dynamicCard');
-            const typeTag = document.getElementById('cardTypeTag');
-            
-            // تحديث شكل البطاقة حسب المبلغ
-            card.className = "mada-card"; // ريست
-            if (bal >= 1000000) {
-                card.classList.add("card-legendary");
-                typeTag.innerText = "LEGENDARY VIP";
-            } else if (bal >= 100000) {
-                card.classList.add("card-pro");
-                typeTag.innerText = "PROFESSIONAL";
-            } else {
-                card.classList.add("card-normal");
-                typeTag.innerText = "STANDARD";
-            }
-
-            document.getElementById('userBalance').innerText = formatNum(bal);
+            document.getElementById('userBalance').innerText = formatNum(currentUser.balance);
             document.getElementById('userNickShow').innerText = currentUser.nickname;
             document.getElementById('cardLast').innerText = String(currentUser.pass).slice(-2);
             if(currentUser.role === 'admin' || currentUser.role === 'dev') document.getElementById('adminTabBtn').style.display = 'block';
@@ -393,7 +313,7 @@
                 showToast("تمت الموافقة ✅");
             } else {
                 await updateDoc(doc(db, "orders", oid), { status: 'rejected', adminName: currentUser.nickname });
-                showToast("تم الرفض ❌");
+                             showToast("تم الرفض ❌");
             }
         }
 
@@ -409,7 +329,7 @@
             const sVal = document.getElementById('adminUserSearch').value.toLowerCase();
             const table = document.getElementById('usersTable');
             const filtered = users.filter(u => u.nickname.toLowerCase().includes(sVal));
-            table.innerHTML = `<tr><th>العضو</th><th>رصيد</th><th>أكشن</th></tr>` + 
+            table.innerHTML = `<tr><th>العضو</th><th>الرصيد</th><th>أكشن</th></tr>` + 
             filtered.map(u => `<tr><td>${u.nickname} ${u.role==='admin'?'⭐':''}</td><td>${formatNum(u.balance)}</td><td><button onclick="editBalance('${u.id}', '${u.nickname}', ${u.balance})" style="color:#00f2ff;background:none;border:none;"><i class="fas fa-coins"></i></button><button onclick="delUsr('${u.id}')" style="color:red;background:none;border:none;margin-right:5px;"><i class="fas fa-trash"></i></button></td></tr>`).join('');
         }
 
@@ -441,7 +361,6 @@
         window.updateBankList = function() {
             const s = document.getElementById('bankSearch').value.toLowerCase();
             const sel = document.getElementById('targetUser');
-            if(!sel) return;
             sel.innerHTML = '<option value="">-- اختر --</option>';
             users.filter(x => x.nickname.toLowerCase().includes(s) && x.id !== currentUser.id).forEach(x => { let o = document.createElement('option'); o.value = x.id; o.text = x.nickname; sel.add(o); });
         }
@@ -465,13 +384,8 @@
         }
         function setTheme(m) {
             const root = document.documentElement;
-            if (m === 'boy') { 
-                root.style.setProperty('--neon-blue', '#00f2ff'); 
-                showToast("تم تفعيل الثيم الأزرق ☠️"); 
-            } else { 
-                root.style.setProperty('--neon-blue', '#ff69b4'); 
-                showToast("تم تفعيل الثيم الوردي 💕"); 
-            }
+            if (m === 'boy') { root.style.setProperty('--neon-blue', '#00f2ff'); document.getElementById('bodyTag').style.backgroundColor = "#0d0d0d"; showToast("تم تفعيل الثيم الأزرق ☠️"); } 
+            else { root.style.setProperty('--neon-blue', '#ff69b4'); document.getElementById('bodyTag').style.backgroundColor = "#1a0d14"; showToast("تم تفعيل الثيم الوردي 💕"); }
         }
         function showToast(m) { Toastify({ text: m, duration: 3000, gravity: "top", position: "center", style: { background: "var(--neon-blue)", color: "black", fontWeight: "bold", borderRadius: "10px" } }).showToast(); }
         window.onload = () => { setTimeout(() => { const loader = document.getElementById('loader'); if(loader) loader.style.display = 'none'; }, 1000); };
