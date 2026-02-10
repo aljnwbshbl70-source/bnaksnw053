@@ -8,8 +8,21 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <style>
         :root { --neon-blue: #00f2ff; --glass: rgba(0, 0, 0, 0.85); }
-        body, html { margin: 0; padding: 0; min-height: 100%; width: 100%; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; transition: 0.5s; background: #0d0d0d; }
-        .bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('https://images.alphacoders.com/132/1322502.jpeg') no-repeat center center fixed; background-size: cover; z-index: -2; filter: brightness(0.4); }
+        body, html { margin: 0; padding: 0; min-height: 100vh; width: 100%; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; transition: 0.5s; background: #0d0d0d; }
+        
+        /* تحسين الخلفية لتكون كامل الشاشة */
+        .bg-overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100vh; 
+            background: url('https://images.alphacoders.com/132/1322502.jpeg') no-repeat center center; 
+            background-size: cover; 
+            z-index: -2; 
+            filter: brightness(0.3) contrast(1.1); 
+        }
+
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; display: flex; justify-content: center; align-items: center; z-index: 9999; color: var(--neon-blue); font-size: 24px; }
         .container-wrapper { width: 95%; max-width: 500px; margin: auto; padding: 20px 10px; box-sizing: border-box; }
         .login-container { display: flex; justify-content: center; align-items: center; min-height: 90vh; }
@@ -23,11 +36,56 @@
         .section { display: none; animation: fadeIn 0.5s; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .mada-card { width: 100%; max-width: 350px; height: 190px; background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); border-radius: 15px; margin: 10px auto 25px; padding: 20px; color: white; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2); box-sizing: border-box; }
-        .history-list { text-align: right; margin-top: 15px; max-height: 200px; overflow-y: auto; font-size: 14px; }
-        .history-item { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); display: block; }
-        .history-top { display: flex; justify-content: space-between; }
-        .history-msg { font-size: 11px; opacity: 0.7; font-style: italic; }
+
+        /* --- تصميم البطاقات المتطور --- */
+        .mada-card { 
+            width: 100%; 
+            max-width: 350px; 
+            height: 200px; 
+            border-radius: 20px; 
+            margin: 10px auto 25px; 
+            padding: 25px; 
+            color: white; 
+            position: relative; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+            box-sizing: border-box; 
+            transition: all 0.5s ease;
+            overflow: hidden;
+        }
+
+        /* فئة العادي - زهري بسيط */
+        .card-normal {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #444;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        /* فئة المحترف - أسود مطفي وفضي */
+        .card-pro {
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            border: 1px solid #717171;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+        }
+        .card-pro::after {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.1) 50%, transparent 55%);
+            background-size: 200% 200%;
+        }
+
+        /* فئة الأسطوري - نيون وسايبر لوكس */
+        .card-legendary {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(15px);
+            border: 2px solid #00f2ff;
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.5), inset 0 0 15px rgba(0, 242, 255, 0.2);
+        }
+        .card-legendary #userBalance {
+            text-shadow: 0 0 10px #00f2ff;
+            color: #00f2ff;
+        }
+
+        .history-list, .top-list { text-align: right; margin-top: 15px; max-height: 200px; overflow-y: auto; font-size: 14px; }
+        .history-item, .top-item { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
         .val-plus { color: #00ff88; }
         .val-minus { color: #ff4d4d; }
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 10px 0; border-top: 2px solid var(--neon-blue); z-index: 2000; }
@@ -52,14 +110,14 @@
         <button class="theme-btn" onclick="toggleMusic()"><i class="fas fa-music"></i></button>
     </div>
 
-    <div id="musicPlayerWrap">
+    <div id="musicPlayerWrap" style="display:none">
         <iframe id="ytPlayer" width="1" height="1" src="https://www.youtube.com/embed/sP7tY2PqRQc?enablejsapi=1" frameborder="0" allow="autoplay"></iframe>
     </div>
 
     <div id="login-screen" class="container-wrapper login-container">
         <div class="neon-box">
             <div style="font-size: 50px;">🏦</div>
-            <h2>بنك سنو المركزي</h2>
+            <h2>بنك سنو</h2>
             <input type="text" id="userIn" class="neon-input" placeholder="اسم المستخدم">
             <input type="password" id="passIn" class="neon-input" placeholder="كلمة المرور">
             <button class="neon-btn" onclick="login()">دخول آمن</button>
@@ -68,26 +126,35 @@
 
     <div id="main-app" class="container-wrapper">
         <div id="tab-home" class="section active">
-            <div class="mada-card">
-                <div style="display:flex; justify-content:space-between"><span>mada</span><i class="fas fa-wifi"></i></div>
-                <div style="margin-top:30px; font-size:18px; letter-spacing:2px">**** **** **** <span id="cardLast">00</span></div>
+            <div id="dynamicCard" class="mada-card card-normal">
+                <div style="display:flex; justify-content:space-between">
+                    <span id="cardTypeTag" style="font-weight:bold; font-size:12px;">STANDARD</span>
+                    <i class="fas fa-wifi"></i>
+                </div>
+                <div style="margin-top:30px; font-size:18px; letter-spacing:2px; font-family: monospace;">**** **** **** <span id="cardLast">00</span></div>
                 <div style="margin-top:20px;">
-                    <small id="userNickShow">الاسم</small><br>
-                    <span style="font-size:26px" id="userBalance">0</span> <small>بوينت🪙</small>
+                    <small id="userNickShow" style="opacity: 0.8;">الاسم</small><br>
+                    <span style="font-size:26px; font-weight:bold;" id="userBalance">0</span> <small>بوينت🪙</small>
                 </div>
             </div>
             
             <div id="userOrderStatus" class="neon-box" style="display:none; border-color: #ff9800;">
-                <h4 style="margin:0;"><i class="fas fa-shopping-bag"></i>طلبك تحت المراجعه وسيتم ارساله في قروب المتجر في اقرب وقت </h4>
+                <h4 style="margin:0;"><i class="fas fa-shopping-bag"></i>تنبيه الطلبات</h4>
                 <div id="orderStatusMsg" style="margin-top:10px; font-size:14px;"></div>
+            </div>
+
+            <div class="neon-box">
+                <h4 style="margin:0 0 10px 0;"><i class="fas fa-trophy"></i> أغنى 10 في البنك</h4>
+                <div id="topUsersList" class="top-list"></div>
             </div>
 
             <div class="neon-box">
                 <h4 style="margin:0 0 10px 0;"><i class="fas fa-history"></i> سجل المعاملات</h4>
                 <div id="historyList" class="history-list"></div>
             </div>
+
             <div class="neon-box">
-                <h4 style="margin:0 0 10px 0;"><i class="fas fa-user-cog"></i> إعدادات الحساب</h4>
+                <h4 style="margin:0 0 10px 0;"><i class="fas fa-user-cog"></i> إدارة الحساب</h4>
                 <input type="text" id="editUser" class="neon-input" placeholder="اسم المستخدم الجديد">
                 <input type="password" id="editPass" class="neon-input" placeholder="كلمة المرور الجديدة">
                 <button class="neon-btn" style="padding:8px 20px; font-size:14px;" onclick="updateProfile()">حفظ التعديلات</button>
@@ -96,7 +163,7 @@
 
         <div id="tab-bank" class="section">
             <div class="neon-box">
-                <h3> تحويل بنكي</h3>
+                <h3>🏦 تحويل بنكي</h3>
                 <div style="position:relative;">
                     <input type="text" id="bankSearch" class="neon-input" placeholder="🔍 ابحث عن اسم المستلم..." oninput="updateBankList()">
                     <select id="targetUser" class="neon-input" style="background:#111; color:white;"></select>
@@ -110,7 +177,7 @@
 
         <div id="tab-shop" class="section">
             <div class="neon-box">
-                <h3>🛒  متجر سنو</h3>
+                <h3>🛒 متجر سنو</h3>
                 <div id="shopList" class="shop-grid"></div>
             </div>
         </div>
@@ -194,35 +261,41 @@
                 loadUI();
                 loadHistory(); 
             }
+            renderTopUsers();
             renderUsersTable();
             updateBankList();
             document.getElementById('loader').style.display = 'none';
         });
 
-        // تم تعديل مراقبة الطلبات لتجنب رسالة الرفض التلقائية
+        window.renderTopUsers = function() {
+            const topList = document.getElementById('topUsersList');
+            const sorted = [...users].sort((a,b) => b.balance - a.balance).slice(0, 10);
+            topList.innerHTML = sorted.map((u, index) => `
+                <div class="top-item">
+                    <span>${index + 1}. ${u.nickname}</span>
+                    <span style="color:var(--neon-blue); font-weight:bold;">${formatNum(u.balance)} 🪙</span>
+                </div>
+            `).join('');
+        }
+
         onSnapshot(collection(db, "orders"), (snapshot) => {
             const allOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            
             if(currentUser) {
-                // جلب آخر طلب لهذا المستخدم
                 const myOrders = allOrders.filter(o => o.uid === currentUser.id).sort((a,b) => b.date - a.date);
                 const myOrder = myOrders[0];
                 const statusBox = document.getElementById('userOrderStatus');
                 const msgBox = document.getElementById('orderStatusMsg');
-                
                 if(myOrder) {
                     activeOrder = (myOrder.status === 'pending') ? myOrder : null;
                     statusBox.style.display = 'block';
                     if(myOrder.status === 'pending') {
-                        msgBox.innerHTML = `<span class="status-badge pending">طلبك (${myOrder.itemName}) قيد المراجعة...</span>`;
+                        msgBox.innerHTML = `<span class="status-badge pending">طلبك (${myOrder.itemName}) قيد المراجعة حالياً... ⏳</span>`;
                     } else if(myOrder.status === 'approved') {
-                        msgBox.innerHTML = `<span class="status-badge approved">تمت الموافقة من ${myOrder.adminName} ✅</span><br><small>تم خصم ${myOrder.itemPrice} بوينت</small>`;
+                        msgBox.innerHTML = `<span class="status-badge approved">✅ تم قبول طلبك من قبل المشرف: ${myOrder.adminName}</span>`;
                     } else if(myOrder.status === 'rejected') {
-                        msgBox.innerHTML = `<span class="status-badge rejected">تم رفض طلبك من ${myOrder.adminName} ❌</span>`;
+                        msgBox.innerHTML = `<span class="status-badge rejected">❌ تم رفض طلبك من قبل المشرف: ${myOrder.adminName}</span>`;
                     }
-                } else {
-                    statusBox.style.display = 'none';
-                }
+                } else { statusBox.style.display = 'none'; }
             }
             renderOrdersTableAdmin(allOrders);
         });
@@ -241,7 +314,24 @@
         }
 
         window.loadUI = function() {
-            document.getElementById('userBalance').innerText = formatNum(currentUser.balance);
+            const bal = currentUser.balance;
+            const card = document.getElementById('dynamicCard');
+            const typeTag = document.getElementById('cardTypeTag');
+            
+            // تحديث شكل البطاقة حسب المبلغ
+            card.className = "mada-card"; // ريست
+            if (bal >= 1000000) {
+                card.classList.add("card-legendary");
+                typeTag.innerText = "LEGENDARY VIP";
+            } else if (bal >= 100000) {
+                card.classList.add("card-pro");
+                typeTag.innerText = "PROFESSIONAL";
+            } else {
+                card.classList.add("card-normal");
+                typeTag.innerText = "STANDARD";
+            }
+
+            document.getElementById('userBalance').innerText = formatNum(bal);
             document.getElementById('userNickShow').innerText = currentUser.nickname;
             document.getElementById('cardLast').innerText = String(currentUser.pass).slice(-2);
             if(currentUser.role === 'admin' || currentUser.role === 'dev') document.getElementById('adminTabBtn').style.display = 'block';
@@ -260,7 +350,6 @@
                             <span>${isOut ? 'إلى: '+l.toName : 'من: '+l.fromName}</span>
                             <span class="${isOut ? 'val-minus' : 'val-plus'}">${isOut ? '-' : '+'}${formatNum(l.amount)}</span>
                         </div>
-                        ${l.msg ? `<div class="history-msg">💬 ${l.msg}</div>` : ''}
                     </div>`;
                 }).join('');
             });
@@ -274,141 +363,64 @@
             if(!tid || isNaN(amt) || amt <= 0) return showToast("أكمل البيانات!");
             if(pass !== currentUser.pass) return showToast("كلمة المرور خطأ!");
             if(amt > currentUser.balance) return showToast("رصيدك لا يكفي!");
-
             const tu = users.find(u => u.id === tid);
             if(confirm(`تأكيد إرسال ${amt} لـ ${tu.nickname}؟`)) {
                 await updateDoc(doc(db, "users", currentUser.id), { balance: currentUser.balance - amt });
                 await updateDoc(doc(db, "users", tid), { balance: tu.balance + amt });
-                await addDoc(collection(db, "transactions"), {
-                    fromId: currentUser.id, fromName: currentUser.nickname,
-                    toId: tid, toName: tu.nickname,
-                    amount: amt, msg: msg, date: Date.now()
-                });
+                await addDoc(collection(db, "transactions"), { fromId: currentUser.id, fromName: currentUser.nickname, toId: tid, toName: tu.nickname, amount: amt, msg: msg, date: Date.now() });
                 showToast("تم التحويل ✅");
-                document.getElementById('bankAmount').value = '';
-                document.getElementById('bankMsg').value = '';
-                document.getElementById('bankPass').value = '';
             }
         }
 
         window.buy = async function(n, p) {
             if(activeOrder) return showToast("لديك طلب قيد المراجعة حالياً!");
             if(currentUser.balance < p) return showToast("رصيدك لا يكفي!");
-            if(confirm(`هل تريد طلب شراء ${n}؟ (سيتم خصم المبلغ عند الموافقة)`)) {
-                await addDoc(collection(db, "orders"), { 
-                    uid: currentUser.id, 
-                    nick: currentUser.nickname, 
-                    itemName: n, 
-                    itemPrice: p,
-                    status: 'pending',
-                    date: Date.now() 
-                });
+            if(confirm(`هل تريد طلب شراء ${n}؟`)) {
+                await addDoc(collection(db, "orders"), { uid: currentUser.id, nick: currentUser.nickname, itemName: n, itemPrice: p, status: 'pending', date: Date.now() });
                 showToast("تم إرسال طلبك للإدارة ⏳");
             }
         }
 
         window.handleOrder = async function(oid, action) {
-            // جلب البيانات المباشرة للطلب
-            const allOrders = await new Promise(res => {
-                onSnapshot(collection(db, "orders"), s => res(s.docs.map(d=>({id:d.id,...d.data()}))), {onlyOnce:true});
-            });
+            const allOrders = await new Promise(res => { onSnapshot(collection(db, "orders"), s => res(s.docs.map(d=>({id:d.id,...d.data()}))), {onlyOnce:true}); });
             const order = allOrders.find(o => o.id === oid);
             if(!order) return;
-
             if(action === 'approve') {
                 const user = users.find(u => u.id === order.uid);
-                if(!user || user.balance < order.itemPrice) {
-                    alert("عفواً، رصيد العضو أصبح غير كافي حالياً!");
-                    return;
-                }
+                if(!user || user.balance < order.itemPrice) return alert("رصيد العضو غير كافي!");
                 await updateDoc(doc(db, "users", order.uid), { balance: user.balance - order.itemPrice });
                 await updateDoc(doc(db, "orders", oid), { status: 'approved', adminName: currentUser.nickname });
-                showToast("تمت الموافقة وخصم المبلغ ✅");
-            } 
-                        else {
-                // إضافة اسم المشرف عند الرفض أيضاً لتظهر في الرسالة
-                await updateDoc(doc(db, "orders", oid), { 
-                    status: 'rejected', 
-                    adminName: currentUser.nickname 
-                });
-                showToast("تم رفض الطلب ❌");
+                showToast("تمت الموافقة ✅");
+            } else {
+                await updateDoc(doc(db, "orders", oid), { status: 'rejected', adminName: currentUser.nickname });
+                showToast("تم الرفض ❌");
             }
         }
-
-        // --- تحديث عرض حالة الطلب للمستخدم (الرسالة التي طلبتها) ---
-        onSnapshot(collection(db, "orders"), (snapshot) => {
-            const allOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            
-            if(currentUser) {
-                // فلترة الطلبات الخاصة بالمستخدم الحالي فقط وترتيبها بالأحدث
-                const myOrders = allOrders.filter(o => o.uid === currentUser.id).sort((a,b) => b.date - a.date);
-                const myOrder = myOrders[0]; // آخر طلب لي
-                const statusBox = document.getElementById('userOrderStatus');
-                const msgBox = document.getElementById('orderStatusMsg');
-                
-                if(myOrder) {
-                    statusBox.style.display = 'block';
-                    if(myOrder.status === 'pending') {
-                        msgBox.innerHTML = `<span class="status-badge pending">طلبك (${myOrder.itemName}) قيد المراجعة حالياً... ⏳</span>`;
-                    } else if(myOrder.status === 'approved') {
-                        msgBox.innerHTML = `<span class="status-badge approved">✅ تم قبول طلبك من قبل المشرف: ${myOrder.adminName}</span>`;
-                    } else if(myOrder.status === 'rejected') {
-                        msgBox.innerHTML = `<span class="status-badge rejected">❌ تم رفض طلبك من قبل المشرف: ${myOrder.adminName}</span>`;
-                    }
-                } else {
-                    statusBox.style.display = 'none';
-                }
-            }
-            // تحديث جدول الإدارة
-            renderOrdersTableAdmin(allOrders);
-        });
 
         window.renderOrdersTableAdmin = function(orders) {
             const table = document.getElementById('ordersTableAdmin');
             if(!table) return;
             const pendingOrders = orders.filter(o => o.status === 'pending');
-            
             table.innerHTML = `<tr><th>العضو</th><th>السلعة</th><th>السعر</th><th>قرار</th></tr>` + 
-            pendingOrders.map(o => `<tr>
-                <td>${o.nick}</td>
-                <td>${o.itemName}</td>
-                <td>${o.itemPrice}</td>
-                <td>
-                    <button onclick="handleOrder('${o.id}', 'approve')" style="color:#00ff88;background:none;border:none;cursor:pointer;"><i class="fas fa-check"></i></button>
-                    <button onclick="handleOrder('${o.id}', 'reject')" style="color:red;background:none;border:none;cursor:pointer;margin-right:10px;"><i class="fas fa-times"></i></button>
-                </td>
-            </tr>`).join('');
+            pendingOrders.map(o => `<tr><td>${o.nick}</td><td>${o.itemName}</td><td>${o.itemPrice}</td><td><button onclick="handleOrder('${o.id}', 'approve')" style="color:#00ff88;background:none;border:none;"><i class="fas fa-check"></i></button><button onclick="handleOrder('${o.id}', 'reject')" style="color:red;background:none;border:none;margin-right:10px;"><i class="fas fa-times"></i></button></td></tr>`).join('');
         }
 
         window.renderUsersTable = function() {
             const sVal = document.getElementById('adminUserSearch').value.toLowerCase();
             const table = document.getElementById('usersTable');
             const filtered = users.filter(u => u.nickname.toLowerCase().includes(sVal));
-            table.innerHTML = `<tr><th>العضو</th><th>الرصيد</th><th>أكشن</th></tr>` + 
-            filtered.map(u => `<tr>
-                <td>${u.nickname} ${u.role==='admin'?'⭐':''}</td>
-                <td>${formatNum(u.balance)}</td>
-                <td>
-                    <button onclick="editBalance('${u.id}', '${u.nickname}', ${u.balance})" style="color:#00f2ff;background:none;border:none;cursor:pointer;"><i class="fas fa-coins"></i></button>
-                    <button onclick="delUsr('${u.id}')" style="color:red;background:none;border:none;margin-right:5px;cursor:pointer;"><i class="fas fa-trash"></i></button>
-                </td>
-            </tr>`).join('');
+            table.innerHTML = `<tr><th>العضو</th><th>رصيد</th><th>أكشن</th></tr>` + 
+            filtered.map(u => `<tr><td>${u.nickname} ${u.role==='admin'?'⭐':''}</td><td>${formatNum(u.balance)}</td><td><button onclick="editBalance('${u.id}', '${u.nickname}', ${u.balance})" style="color:#00f2ff;background:none;border:none;"><i class="fas fa-coins"></i></button><button onclick="delUsr('${u.id}')" style="color:red;background:none;border:none;margin-right:5px;"><i class="fas fa-trash"></i></button></td></tr>`).join('');
         }
 
         window.editBalance = async function(id, name, current) {
-            const val = prompt(`تعديل رصيد ${name}\nأدخل المبلغ للزيادة أو - للمخصم:`);
-            if(val && !isNaN(val)) {
-                await updateDoc(doc(db, "users", id), { balance: current + parseInt(val) });
-                showToast("تم التحديث ✅");
-            }
+            const val = prompt(`تعديل رصيد ${name}:`);
+            if(val && !isNaN(val)) { await updateDoc(doc(db, "users", id), { balance: current + parseInt(val) }); showToast("تم التحديث ✅"); }
         }
 
         window.addNewUser = async function(role) {
             const n = document.getElementById('nNick').value, u = document.getElementById('nUser').value, p = document.getElementById('nPass').value, b = parseInt(document.getElementById('nBal').value || 0);
-            if(n && u && p) {
-                await addDoc(collection(db, "users"), { nickname: n, user: u, pass: p, balance: b, role: role });
-                showToast("تمت الإضافة بنجاح!");
-            }
+            if(n && u && p) { await addDoc(collection(db, "users"), { nickname: n, user: u, pass: p, balance: b, role: role }); showToast("تمت الإضافة!"); }
         }
 
         onSnapshot(collection(db, "shop"), (snap) => {
@@ -429,83 +441,40 @@
         window.updateBankList = function() {
             const s = document.getElementById('bankSearch').value.toLowerCase();
             const sel = document.getElementById('targetUser');
+            if(!sel) return;
             sel.innerHTML = '<option value="">-- اختر --</option>';
-            users.filter(x => x.nickname.toLowerCase().includes(s) && x.id !== currentUser.id)
-                 .forEach(x => { let o = document.createElement('option'); o.value = x.id; o.text = x.nickname; sel.add(o); });
+            users.filter(x => x.nickname.toLowerCase().includes(s) && x.id !== currentUser.id).forEach(x => { let o = document.createElement('option'); o.value = x.id; o.text = x.nickname; sel.add(o); });
         }
 
-        window.showTab = function(id) { 
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); 
-            document.getElementById(id).classList.add('active'); 
-        }
-
-        window.toggleDiv = function(id) { 
-            const d = document.getElementById(id); d.style.display = d.style.display==='none'?'block':'none'; 
-        }
-
+        window.showTab = function(id) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+        window.toggleDiv = function(id) { const d = document.getElementById(id); d.style.display = d.style.display==='none'?'block':'none'; }
+        
         window.delUsr = async function(id) { 
-            if(confirm("هل أنت متأكد من حذف هذا الحساب نهائياً؟")) {
-                try {
-                    await deleteDoc(doc(db, "users", id)); 
-                    showToast("تم حذف العضو بنجاح 🗑️");
-                } catch (e) {
-                    showToast("فشل الحذف، حاول مجدداً");
-                }
-            }
+            const target = users.find(u => u.id === id);
+            if(target && target.role === 'dev') return showToast("لا يمكن حذف حساب المطور! ❌");
+            if(confirm("حذف الحساب نهائياً؟")) { await deleteDoc(doc(db, "users", id)); showToast("تم الحذف 🗑️"); } 
         }
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    
     <script>
         let isM = false;
         function toggleMusic() {
             const f = document.getElementById('ytPlayer');
-            if(!isM) { 
-                f.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-                isM = true; 
-                showToast("تم تشغيل القران الكريم انصت 🎶");
-            } else { 
-                f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-                isM = false; 
-                showToast("تم ايقاف القران الكريم 🔇");
-            }
+            if(!isM) { f.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); isM = true; showToast("تم تشغيل القران الكريم انصت 🎶"); } 
+            else { f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); isM = false; showToast("تم ايقاف القران الكريم 🔇"); }
         }
-
         function setTheme(m) {
             const root = document.documentElement;
-            if (m === 'boy') {
-                root.style.setProperty('--neon-blue', '#00f2ff');
-                document.getElementById('bodyTag').style.backgroundColor = "#0d0d0d";
-                showToast("تم تفعيل الثيم الأزرق ☠️");
-            } else {
-                root.style.setProperty('--neon-blue', '#ff69b4');
-                document.getElementById('bodyTag').style.backgroundColor = "#1a0d14";
-                showToast("تم تفعيل الثيم الوردي 💕");
+            if (m === 'boy') { 
+                root.style.setProperty('--neon-blue', '#00f2ff'); 
+                showToast("تم تفعيل الثيم الأزرق ☠️"); 
+            } else { 
+                root.style.setProperty('--neon-blue', '#ff69b4'); 
+                showToast("تم تفعيل الثيم الوردي 💕"); 
             }
         }
-
-        function showToast(m) { 
-            Toastify({ 
-                text: m, 
-                duration: 3000, 
-                gravity: "top", 
-                position: "center", 
-                style: { 
-                    background: "var(--neon-blue)", 
-                    color: "black", 
-                    fontWeight: "bold",
-                    borderRadius: "10px"
-                } 
-            }).showToast(); 
-        }
-
-        window.onload = () => {
-            setTimeout(() => {
-                const loader = document.getElementById('loader');
-                if(loader) loader.style.display = 'none';
-            }, 1000);
-        };
+        function showToast(m) { Toastify({ text: m, duration: 3000, gravity: "top", position: "center", style: { background: "var(--neon-blue)", color: "black", fontWeight: "bold", borderRadius: "10px" } }).showToast(); }
+        window.onload = () => { setTimeout(() => { const loader = document.getElementById('loader'); if(loader) loader.style.display = 'none'; }, 1000); };
     </script>
 </body>
 </html>
