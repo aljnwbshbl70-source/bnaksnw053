@@ -312,7 +312,12 @@
         }
 
         window.sendMoney = async function() {
-                        const tid = document.getElementById('targetUser').value;if(!tid || isNaN(amt) || amt <= 0) return showToast("أكمل البيانات!");
+                        const tid = document.getElementById('targetUser').value;
+            const amt = parseInt(document.getElementById('bankAmount').value);
+            const msg = document.getElementById('bankMsg').value;
+            const pass = document.getElementById('bankPass').value;
+
+            if(!tid || isNaN(amt) || amt <= 0) return showToast("أكمل البيانات!");
             if(pass !== currentUser.pass) return showToast("كلمة المرور خطأ!");
             if(amt > currentUser.balance) return showToast("رصيدك لا يكفي!");
 
@@ -528,6 +533,3 @@
     </script>
 </body>
 </html>
-
-            
-            
